@@ -2,7 +2,7 @@
  Make a video to introduce your code.
  
 # Video
-<video src="https://github.com/TSIOJeft/CodeVideo/blob/main/output_video.mp4"></video>
+![preview](https://github.com/TSIOJeft/CodeVideo/blob/main/output_video.gif)
 
 # Use
 1. input your code in code.txt.
