@@ -41,9 +41,9 @@ def generate_video():
     i = 1
     argc = len(sys.argv)
     while i < argc:
-        if sys.argv[i] == "-f" and i + 1 <= argc:
+        if sys.argv[i] == "-f" and i + 1 < argc:
             input_filename = sys.argv[i+1]
-        if sys.argv[i] == "-s" and i + 1 <= argc:
+        if sys.argv[i] == "-s" and i + 1 < argc:
             display_speed = int(sys.argv[i+1])
         i += 1
     # open file
