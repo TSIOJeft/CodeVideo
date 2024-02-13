@@ -9,16 +9,24 @@ width, height = 1920, 1080
 fps = 30
 seconds = 10
 
+cursor_x = 0
+cursor_y = 0
+cursor_width = 3
+cursor_height = 15
+cursor_fill1 = (0, 195, 255)
+cursor_fill2 = (0, 0, 0)
+cursor_fill = cursor_fill1
+
 
 def generate_video():
+    global cursor_x, cursor_y, cursor_fill
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')
     out = cv2.VideoWriter('output_video.mp4', fourcc, fps, (width, height))
     line_height = 36
     line_left = 50
     line_top = 50
     word_space = 12
-    cursor_width = 3
-    cursor_height = 15
+
     frame = np.zeros((height, width, 3), dtype=np.uint8)
     image = Image.fromarray(frame)
     draw = ImageDraw.Draw(image)
@@ -26,14 +34,9 @@ def generate_video():
     font_size = 20
     font_color = (255, 255, 255)
     common_font = ImageFont.truetype(font_path, font_size)
-    cursor_x = 0
-    cursor_y = 0
 
     chinese_font = ImageFont.truetype("MiSans-Medium.ttf", font_size)
 
-    cursor_fill1 = (0, 195, 255)
-    cursor_fill2 = (0, 0, 0)
-    cursor_fill = cursor_fill1
     font = common_font
     with open("code.txt", "r", encoding="utf-8") as file:
         lines = file.readlines()
@@ -91,6 +94,7 @@ def generate_video():
             line_top = 50
 
     # release video file
+    cursor_delay(5, out, draw, image)
     out.release()
 
 
@@ -106,6 +110,20 @@ code_color_scheme = {"(": "#FFC300", ")": "#FFC300", "{": "#607D8B", "}": "#607D
                      ";": "#651FFF", "'": "#304FFE"}
 
 code_color_list = ["#F57F17", "#AFB42B", "#689F38", "#009688", "#0091EA", "#2962FF", "#651FFF"]
+
+
+def cursor_delay(second, out, draw, image):
+    global cursor_fill
+    for i in range(second):
+        draw.rectangle([cursor_x, cursor_y, cursor_x + cursor_width, cursor_y + cursor_height],
+                       fill=cursor_fill)
+        if cursor_fill == cursor_fill1:
+            cursor_fill = cursor_fill2
+        else:
+            cursor_fill = cursor_fill1
+        img = np.array(image)
+        for j in range(fps):
+            write_img(out, img)
 
 
 def code_color(word):
