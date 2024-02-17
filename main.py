@@ -22,6 +22,8 @@ def generate_video():
     global cursor_x, cursor_y, cursor_fill
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')
     out = cv2.VideoWriter('output_video.mp4', fourcc, fps, (width, height))
+    input_filename = "code.txt"
+    display_speed = 1
     line_height = 36
     line_left = 50
     line_top = 50
@@ -38,7 +40,17 @@ def generate_video():
     chinese_font = ImageFont.truetype("MiSans-Medium.ttf", font_size)
 
     font = common_font
-    with open("code.txt", "r", encoding="utf-8") as file:
+    # args
+    i = 1
+    argc = len(sys.argv)
+    while i < argc:
+        if sys.argv[i] == "-f" and i + 1 < argc:
+            input_filename = sys.argv[i+1]
+        if sys.argv[i] == "-s" and i + 1 < argc:
+            display_speed = int(sys.argv[i+1])
+        i += 1
+    # open file
+    with open(input_filename, "r", encoding="utf-8") as file:
         lines = file.readlines()
     line_count = 1
     for line in lines:
@@ -57,7 +69,7 @@ def generate_video():
         line = format_code(line)
         words = line.split(" ")
         img = np.array(image)
-        write_img(out, img)
+        write_img(out, img, display_speed)
         for word in words:
             word = word.strip()
             if len(word) == 0:
@@ -84,7 +96,7 @@ def generate_video():
                 else:
                     cursor_fill = cursor_fill1
                 img = np.array(image)
-                write_img(out, img)
+                write_img(out, img, display_speed)
             line_left += word_space
         line_top = line_top + line_height
         line_left = 50
@@ -141,8 +153,8 @@ def clear_code(out, draw, image):
         out.write(np.array(image))
 
 
-def write_img(out, img):
-    for i in range(1):
+def write_img(out, img, display_speed):
+    for i in range(display_speed):
         out.write(img)
 
 
